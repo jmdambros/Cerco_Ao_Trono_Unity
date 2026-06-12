@@ -18,12 +18,20 @@ public class TroopCard : MonoBehaviour
         data = troopData;
         onClickCallback = onClick;
 
-        nameText.text = troopData.name;
-        costText.text = $"{troopData.goldCost}g";
-
-        if (troopData.icon != null)
+        if (nameText != null) nameText.text = troopData.name;
+        if (costText != null) costText.text = $"{troopData.goldCost}g";
+        if (iconImage != null && troopData.icon != null)
             iconImage.sprite = troopData.icon;
 
-        button.onClick.AddListener(() => onClickCallback?.Invoke(data));
+        // Disable raycast on text children so they don't block button clicks
+        foreach (var tmp in GetComponentsInChildren<TextMeshProUGUI>())
+            tmp.raycastTarget = false;
+
+        button.onClick.RemoveAllListeners();
+        button.onClick.AddListener(() =>
+        {
+            Debug.Log($"Clicked: {troopData.name}");
+            onClickCallback?.Invoke(data);
+        });
     }
 }

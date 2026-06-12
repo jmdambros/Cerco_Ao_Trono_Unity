@@ -9,8 +9,8 @@ public class PreparationUI : MonoBehaviour
     public TextMeshProUGUI goldText;
     public Transform troopCardContainer;
     public GameObject troopCardPrefab;
-    public GameObject attackButtonObject;   // drag AttackButton here
-    public GameObject undoButtonObject;     // drag UndoButton here
+    public GameObject attackButtonObject;
+    public GameObject undoButtonObject;
 
     [Header("Troop Definitions")]
     public List<TroopData> availableTroops;
@@ -20,44 +20,60 @@ public class PreparationUI : MonoBehaviour
 
     void Start()
     {
-        // Get Button components automatically from the GameObjects
+        Debug.Log("PreparationUI Start called");
+
+        if (attackButtonObject == null) { Debug.LogError("attackButtonObject is null!"); return; }
+        if (undoButtonObject == null)   { Debug.LogError("undoButtonObject is null!"); return; }
+
         attackButton = attackButtonObject.GetComponent<Button>();
-        undoButton = undoButtonObject.GetComponent<Button>();
+        undoButton   = undoButtonObject.GetComponent<Button>();
+
+        if (attackButton == null) { Debug.LogError("AttackButton has no Button component!"); return; }
+        if (undoButton == null)   { Debug.LogError("UndoButton has no Button component!"); return; }
 
         attackButton.onClick.AddListener(OnAttackPressed);
         undoButton.onClick.AddListener(OnUndoPressed);
 
+        Debug.Log($"Building {availableTroops.Count} troop cards");
         BuildTroopCards();
-        UpdateGoldDisplay();
-    }
-
-    void Update()
-    {
         UpdateGoldDisplay();
     }
 
     void BuildTroopCards()
     {
+        if (troopCardPrefab == null) { Debug.LogError("troopCardPrefab is null!"); return; }
+        if (troopCardContainer == null) { Debug.LogError("troopCardContainer is null!"); return; }
+
         foreach (var data in availableTroops)
         {
+            if (data.prefab == null) { Debug.LogWarning($"Troop '{data.name}' has no prefab!"); continue; }
+
+            Debug.Log($"Spawning card for: {data.name}");
             GameObject card = Instantiate(troopCardPrefab, troopCardContainer);
             TroopCard cardScript = card.GetComponent<TroopCard>();
-            if (cardScript != null)
-                cardScript.Setup(data, OnTroopCardPressed);
+
+            if (cardScript == null)
+            {
+                Debug.LogError("Spawned card has no TroopCard script!");
+                continue;
+            }
+
+            Debug.Log($"Calling Setup for: {data.name}");
+            cardScript.Setup(data, OnTroopCardPressed);
         }
     }
 
     void OnTroopCardPressed(TroopData data)
     {
+        Debug.Log($"Troop pressed: {data.name}");
         bool added = GameManager.Instance.TryAddTroop(data.prefab, data.goldCost);
-        if (added)
-            UpdateGoldDisplay();
-        else
-            Debug.Log("Not enough gold!");
+        if (added) UpdateGoldDisplay();
+        else Debug.Log("Not enough gold!");
     }
 
     void OnAttackPressed()
     {
+        Debug.Log("Attack pressed!");
         gameObject.SetActive(false);
         GameManager.Instance.StartExecution();
     }
@@ -66,16 +82,20 @@ public class PreparationUI : MonoBehaviour
     {
         var queue = GameManager.Instance.GetQueue();
         if (queue.Count == 0) return;
-
         var lastPrefab = queue[queue.Count - 1];
         int cost = lastPrefab.GetComponent<Troop>().goldCost;
         GameManager.Instance.RemoveLastTroop(cost);
         UpdateGoldDisplay();
     }
 
+    void Update()
+    {
+        UpdateGoldDisplay();
+    }
+
     void UpdateGoldDisplay()
     {
-        if (goldText != null)
+        if (goldText != null && GameManager.Instance != null)
             goldText.text = $"Gold: {GameManager.Instance.currentGold}";
     }
 }
