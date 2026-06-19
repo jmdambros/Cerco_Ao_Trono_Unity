@@ -4,8 +4,8 @@ using UnityEngine;
 public class UnicornKamikaze : Troop
 {
     [Header("Kamikaze Specific")]
-    public float explosionRadius = 2f;
-    public float explosionForce = 20f;
+    public float explosionRadius = 5f;
+    public float explosionForce = 500f;
     public float chargeSpeed = 14f;
     public GameObject explosionEffectPrefab;
 

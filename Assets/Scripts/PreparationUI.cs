@@ -48,24 +48,17 @@ public class PreparationUI : MonoBehaviour
         {
             if (data.prefab == null) { Debug.LogWarning($"Troop '{data.name}' has no prefab!"); continue; }
 
-            Debug.Log($"Spawning card for: {data.name}");
             GameObject card = Instantiate(troopCardPrefab, troopCardContainer);
             TroopCard cardScript = card.GetComponent<TroopCard>();
 
-            if (cardScript == null)
-            {
-                Debug.LogError("Spawned card has no TroopCard script!");
-                continue;
-            }
+            if (cardScript == null) { Debug.LogError("Spawned card has no TroopCard script!"); continue; }
 
-            Debug.Log($"Calling Setup for: {data.name}");
             cardScript.Setup(data, OnTroopCardPressed);
         }
     }
 
     void OnTroopCardPressed(TroopData data)
     {
-        Debug.Log($"Troop pressed: {data.name}");
         bool added = GameManager.Instance.TryAddTroop(data.prefab, data.goldCost);
         if (added) UpdateGoldDisplay();
         else Debug.Log("Not enough gold!");
@@ -73,7 +66,6 @@ public class PreparationUI : MonoBehaviour
 
     void OnAttackPressed()
     {
-        Debug.Log("Attack pressed!");
         gameObject.SetActive(false);
         GameManager.Instance.StartExecution();
     }
@@ -82,14 +74,10 @@ public class PreparationUI : MonoBehaviour
     {
         var queue = GameManager.Instance.GetQueue();
         if (queue.Count == 0) return;
-        var lastPrefab = queue[queue.Count - 1];
-        int cost = lastPrefab.GetComponent<Troop>().goldCost;
-        GameManager.Instance.RemoveLastTroop(cost);
-        UpdateGoldDisplay();
-    }
 
-    void Update()
-    {
+        var lastPrefab = queue[queue.Count - 1];
+        int cost = availableTroops.Find(t => t.prefab == lastPrefab).goldCost;
+        GameManager.Instance.RemoveLastTroop(cost);
         UpdateGoldDisplay();
     }
 

@@ -17,11 +17,16 @@ public abstract class Troop : MonoBehaviour
     public float trajectoryTimeStep = 0.1f;
     public GameObject dotPrefab;
 
+    [Header("Cleanup")]
+    public float cleanupDelay = 3f;
+    public float cleanupSpeedThreshold = 0.5f;
+
     protected Rigidbody2D rb;
     protected Vector2 startPosition;
     protected bool launched = false;
     protected bool isDragging = false;
     private GameObject[] dots;
+    private bool _cleanupStarted = false;
 
     public bool IsReadyToLaunch { get; private set; } = false;
     public bool HasLaunched => launched;
@@ -37,8 +42,12 @@ public abstract class Troop : MonoBehaviour
 
     protected virtual void Update()
     {
-        if (launched) return;
-        if (!IsReadyToLaunch) return;   // wait until GameManager activates this troop
+        if (launched)
+        {
+            StartCleanupIfNeeded();
+            return;
+        }
+        if (!IsReadyToLaunch) return;
 
         Vector2 inputPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
@@ -86,6 +95,24 @@ public abstract class Troop : MonoBehaviour
         if (launched) OnHit(col);
     }
 
+    // --- Cleanup ---
+
+    private void StartCleanupIfNeeded()
+    {
+        if (_cleanupStarted) return;
+        if (rb.linearVelocity.magnitude < cleanupSpeedThreshold)
+        {
+            _cleanupStarted = true;
+            StartCoroutine(CleanupRoutine());
+        }
+    }
+
+    private System.Collections.IEnumerator CleanupRoutine()
+    {
+        yield return new WaitForSeconds(cleanupDelay);
+        Destroy(gameObject);
+    }
+
     // --- Trajectory ---
 
     void CreateDots()
@@ -114,7 +141,7 @@ public abstract class Troop : MonoBehaviour
         }
     }
 
-    void HideDots()
+    protected void HideDots()
     {
         if (dots == null) return;
         foreach (var dot in dots)
