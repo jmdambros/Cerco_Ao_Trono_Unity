@@ -42,14 +42,17 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: New Layer 1
+  - name: Background
     uniqueID: 4089649453
     locked: 0
-  - name: New Layer 2
+  - name: Front of Background
     uniqueID: 1758146551
     locked: 0
-  - name: New Layer 3
+  - name: Final Layer
     uniqueID: 635799887
+    locked: 0
+  - name: Layer on the ground
+    uniqueID: 2202729845
     locked: 0
   m_RenderingLayers:
   - Default

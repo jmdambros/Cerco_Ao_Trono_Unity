@@ -55,13 +55,15 @@ MonoBehaviour:
   trajectoryDots: 30
   trajectoryTimeStep: 0.1
   dotPrefab: {fileID: 761549093974203626, guid: 4d784f91b7a00a441806150df0602f64, type: 3}
+  cleanupDelay: 3
+  cleanupSpeedThreshold: 0.5
   explosionRadius: 5
   explosionForce: 500
   chargeSpeed: 14
   explosionEffectPrefab: {fileID: 0}
 --- !u!212 &4844260143493893045
 SpriteRenderer:
-  serializedVersion: 2
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -104,8 +106,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 635799887
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
@@ -118,6 +120,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+  m_BlendShapeWeights: []
 --- !u!50 &722083852860902706
 Rigidbody2D:
   serializedVersion: 5

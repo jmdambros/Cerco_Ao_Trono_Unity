@@ -67,6 +67,6 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "Cerco_Ao_Trono_Unity.slnx",
+    "dotnet.defaultSolution": "cerco_ao_trono.slnx",
     "dotnet.enableWorkspaceBasedDevelopment": false
 }
