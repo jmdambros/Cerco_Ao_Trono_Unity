@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: ad6e75aeec0e2e849abd0800d9ee9224
   - enabled: 1
+    path: Assets/Scenes/Fase 2.0.unity
+    guid: 6bbd24ff4d8e87c27805b402bbb62663
+  - enabled: 1
     path: Assets/Scenes/MapaFases.unity
     guid: fb44c3d09f29c62408672a4869285777
   - enabled: 1
